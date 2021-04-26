@@ -1,0 +1,14 @@
+plugins {
+    id 'java'
+    id 'kotlin'
+}
+
+jar {
+    manifest {
+        attributes("Lint-Registry-v2": "com.qianfanyun.lintlib.DangerIssueRegistry")
+    }
+}
+
+dependencies {
+    compileOnly "com.android.tools.lint:lint-api:27.1.3"
+}

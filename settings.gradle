@@ -1,0 +1,3 @@
+include ':lintlib'
+include ':app'
+rootProject.name = "LintDemo"
