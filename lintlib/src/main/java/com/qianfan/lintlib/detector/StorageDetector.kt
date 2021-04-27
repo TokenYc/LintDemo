@@ -16,7 +16,7 @@ class StorageDetector : Detector(), ClassScanner {
 
     companion object {
         val ISSUE = Issue.create(
-            "useSdcard",//问题 Id
+            "UseSdcard",//问题 Id
             "",//问题的简单描述，会被 report 接口传入的描述覆盖
             "",//问题的详细描述
             Category.CORRECTNESS,//问题类型
@@ -29,6 +29,7 @@ class StorageDetector : Detector(), ClassScanner {
             )
         )
     }
+
     /**
      * 返回这个 Detector 适用的 ASM 指令
      */
@@ -36,11 +37,18 @@ class StorageDetector : Detector(), ClassScanner {
         //这里关心的是与方法调用相关的指令，其实就是以 INVOKE 开头的指令集
         return intArrayOf(AbstractInsnNode.METHOD_INSN)
     }
+
     /**
      * 扫描到 Detector 适用的指令时，回调此接口
      */
-    override fun checkInstruction(context: ClassContext, classNode: ClassNode, method: MethodNode, instruction: AbstractInsnNode) {
-        if (instruction.opcode != Opcodes.INVOKEVIRTUAL) {
+    override fun checkInstruction(
+        context: ClassContext,
+        classNode: ClassNode,
+        method: MethodNode,
+        instruction: AbstractInsnNode
+    ) {
+        //如果不是普通方法调用和静态方法，就直接return
+        if (instruction.opcode != Opcodes.INVOKEVIRTUAL && instruction.opcode != Opcodes.INVOKESTATIC) {
             return
         }
         val callerMethodSig = classNode.name + "." + method.name + method.desc
